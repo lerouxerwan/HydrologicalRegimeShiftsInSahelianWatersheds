@@ -50,7 +50,7 @@ def main_more_metrics(fast: bool, show: bool):
             observed_values, simulated_values = np.array(observed_values), np.array(simulated_values)
             metrics = [
                 compute_nse(simulated_values, observed_values),
-                mean_squared_error(observed_values, simulated_values, squared=False),
+                mean_squared_error(observed_values, simulated_values),
                 np.mean(simulated_values) - np.mean(observed_values),
             ]
             metrics_list.append(metrics)
