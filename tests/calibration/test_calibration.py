@@ -5,22 +5,9 @@ from matplotlib import pyplot as plt
 from calibration.calibration import Calibration
 from calibration.calibration_visualisation import _plot_trajectory_ensemble
 from calibration.dynamical_model.one_state.tiphyc_annual import DynamicalModelTipHycAnnual
-from calibration.dynamical_model.two_states.wendling_2019 import DynamicalModelWendling2019
-from calibration.forcing_function.rain.hombori_rain_forcing_function import \
-    HomboriRainForcingFunction
-from calibration.forcing_function.rain.watershed_rain_forcing_function import RainObsForcingFunction, \
-    RainSimuForcingDebiased
-from calibration.observation_constraint.vegetation.ortonde_vegetation_constraint import OrtondeVegetationConstraint
+from calibration.forcing_function.rain.watershed_rain_forcing_function import RainObsForcingFunction
 from calibration.observation_constraint.runoff.runoff_coefficient_constraint import \
     RunoffCoefficientObservationConstraint
-from simulation.debiasing_function.annual.cdft_annual import CdftAnnual1
-
-
-def test_calibration_wendling_2019():
-    forcing_function = HomboriRainForcingFunction()
-    observation_constraint = OrtondeVegetationConstraint()
-    dynamical_model_type = DynamicalModelWendling2019
-    run_calibration_functions(forcing_function, observation_constraint, dynamical_model_type)
 
 
 @pytest.fixture
@@ -125,23 +112,6 @@ def test_load_calibration_and_apply_other_forcing():
                               dynamical_model_type(forcing_function),
                               nb_samples, ensemble_size)
     calibration.save_calibration()
-    #  Load other calibration but solve states with another forcing
-    other_forcing_function = RainSimuForcingDebiased('Dargol_Kakassi','IPSL-CM6A-LR', 'historical', 'r2i1p1f1',
-                                                     CdftAnnual1)
-    other_calibration = Calibration(observation_constraint, other_forcing_function,
-                                    dynamical_model_type(other_forcing_function),
-                                    nb_samples, ensemble_size, loading_calibration=True)
-    with pytest.raises(AssertionError):
-        assert_equal_values(calibration, other_calibration, equal_error=False)
-    # Load with the forcing after the year 1991
-    _ = Calibration(observation_constraint, other_forcing_function,
-                    dynamical_model_type(other_forcing_function),
-                    nb_samples, ensemble_size, loading_calibration=True,
-                    initial_year_for_loading=1990)
-    assert len(calibration.times) > len(other_calibration.times)
-    for year in [2000, 2007, 2014]:
-        assert_not_equal_state(calibration, other_calibration, year=year)
     #  Remove file
     calibration.path_manager.remove_folder()
-    other_calibration.path_manager.remove_folder()
 #

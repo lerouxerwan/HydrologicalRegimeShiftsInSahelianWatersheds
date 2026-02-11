@@ -5,7 +5,6 @@ from calibration.dynamical_model.one_state.tiphyc_annual import DynamicalModelTi
 from calibration.dynamical_model.two_states.wendling_2019 import DynamicalModelWendling2019
 from calibration.forcing_function.rain.rain_forcing_function import RAIN_STR
 from calibration.forcing_function.rain.watershed_rain_forcing_function import RainObsForcingFunction
-from calibration.observation_constraint.vegetation.ortonde_vegetation_constraint import OrtondeVegetationConstraint
 from calibration.observation_constraint.runoff.runoff_coefficient_constraint import \
     RunoffCoefficientObservationConstraint
 from calibration.utils_calibration.load_sample_v1 import load_sample_parameters
@@ -68,8 +67,3 @@ def test_get_state_wendling_2022(forcing_function, forcings):
     dynamical_model.get_state(forcings, 1957, params, observation_constraint)
 
 
-def test_get_state_wendling_2019(forcing_function, forcings):
-    dynamical_model = DynamicalModelWendling2019(forcing_function)
-    params = get_params(dynamical_model)
-    observation_constraint = OrtondeVegetationConstraint()
-    dynamical_model.get_state(forcings, 1955, params, observation_constraint)

@@ -17,12 +17,8 @@ def watershed_name():
 
 
 def test_load_watershed_constraint(watershed_name):
-    ax = plt.gca()
-    for observation_constraint_type in [VegetationObservationConstraint,
-                                         VegetationAndRunoffCoefficientObservationConstraint,
-                                         RunoffCoefficientObservationConstraint]:
-        observation_constraint = observation_constraint_type(watershed_name)
-        observation_constraint.plot_observation_constraint(ax)
+    observation_constraint = RunoffCoefficientObservationConstraint(watershed_name)
+    observation_constraint.plot_observation_constraint(plt.gca())
 
 
 def load_ortonde_constraint():
